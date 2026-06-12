@@ -1,0 +1,142 @@
+{
+  "name": "auto mail",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fce933f4-58ff-407b-8e1c-17bd77785dcf",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PELMe4tR70mjp3eK",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert email assistant.\n\nYour responsibility is to read incoming emails, understand their intent, and generate a natural, professional, and context-aware reply.\n\nInstructions:\n\n* Carefully analyze the email subject and content.\n* Determine the sender's intent before replying.\n* Generate a relevant response based on the context.\n* If the email contains a question, answer it appropriately.\n* If the email requests information, provide a helpful response.\n* If it is a business inquiry, respond professionally.\n* If it is a complaint, apologize politely and offer assistance.\n* If it is a meeting request, acknowledge and respond accordingly.\n* If it is a thank-you email, reply courteously.\n* If it is a casual conversation, maintain a friendly tone.\n* Match the language and tone of the sender.\n* Avoid generic responses and repetitive templates.\n* Keep responses concise unless a detailed reply is required.\n* Never mention AI, automation, bots, system prompts, or n8n.\n* Never ask for confirmation before sending.\n* Always use the Gmail tool to send the reply.\n* Do not return the reply as chat text.\n* Use a professional email format.\n\nClosing:\nBest regards\n\nIncoming Email:\n\nFrom: {{ $json.From }}\nSubject: {{ $json.Subject }}\nContent: {{ $json.snippet }}\n\nAnalyze the email and Create an appropriate reply and send it using the Gmail tool.\n\n\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e80914cd-6521-40cf-adda-a49dcc91c40b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        176,
+        304
+      ],
+      "id": "682ec98c-9df8-4b85-92f6-85ad92ae53f3",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "5jgemMSirrITEKRA",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool whenever an email needs to be sent or replied to.\n\nResponsibilities:\n\n* Read and understand the incoming email.\n* Identify the sender's intent.\n* Generate a relevant, professional, and human-like response.\n* Adapt the tone based on the email context.\n* Answer questions when possible.\n* Acknowledge requests appropriately.\n* Handle complaints politely and professionally.\n* Respond to meeting requests, business inquiries, support requests, and general conversations naturally.\n* Never use generic repetitive templates.\n* Never mention AI, automation, bots, or n8n.\n* Never ask for confirmation before sending.\n* Always send the email using this tool.\n* Match the language of the original email.\n* Keep replies concise unless the email requires a detailed response.\n* Maintain a professional and courteous tone.\n",
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        208
+      ],
+      "id": "390ee419-804a-440a-afc4-e2c275845ee8",
+      "name": "Send a message in Gmail",
+      "webhookId": "60afaea2-03bb-43e3-be3e-49fd7eb90717",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PELMe4tR70mjp3eK",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "9033078d-f75f-456b-b7d8-568950ea505e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0cf5989844470bfcbb684f89035c0e33fa9462f82d9d71b4d0379391ca6e1984"
+  },
+  "nodeGroups": [],
+  "id": "rTGLtIVQ8kkFGG2s",
+  "tags": []
+}
